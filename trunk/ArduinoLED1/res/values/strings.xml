@@ -4,5 +4,13 @@
     <string name="app_name">ArduinoLED1</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="onLed">Turn LED On</string>
+    <string name="offLed">Turn LED Off</string>
+    <string name="onCurt">Open Curtain</string>
+    <string name="offCurt">Close Curtain</string>
+    <string name="onGate">Open Gate</string>
+    <string name="offGate">Close Gate</string>
+    <string name="getTemp">Get Temperature</string>
+    <string name="temp">0°C</string>
 
 </resources>

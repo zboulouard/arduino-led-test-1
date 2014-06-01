@@ -3,7 +3,7 @@ package com.arduino.arduinoled1;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
- 
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,12 +14,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
  
 public class MainActivity extends Activity {
   private static final String TAG = "LEDOnOff";
    
-  Button btnOn, btnOff;
+  Button ledOn, ledOff;
+  Button gateOn, gateOff;
+  Button curtOn, curtOff;
+  Button getTemp;
+  
+  TextView temp;
    
   private static final int REQUEST_ENABLE_BT = 1;
   private BluetoothAdapter btAdapter = null;
@@ -42,29 +48,82 @@ public class MainActivity extends Activity {
  
     setContentView(R.layout.activity_main);
  
-    btnOn = (Button) findViewById(R.id.btnOn);
-    btnOff = (Button) findViewById(R.id.btnOff);
+    ledOn = (Button) findViewById(R.id.ledOn);
+    ledOff = (Button) findViewById(R.id.ledOff);
+    gateOn = (Button) findViewById(R.id.gateOn);
+    gateOff = (Button) findViewById(R.id.gateOff);
+    curtOn = (Button) findViewById(R.id.curtOn);
+    curtOff = (Button) findViewById(R.id.curtOff);
+    getTemp = (Button) findViewById(R.id.getTemp);
+    
+    temp = (TextView) findViewById(R.id.temp);
      
     btAdapter = BluetoothAdapter.getDefaultAdapter();
     checkBTState();
  
-    btnOn.setOnClickListener(new OnClickListener() {
+    ledOn.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         sendData("1");
         Toast msg = Toast.makeText(getBaseContext(),
-            "You have clicked On", Toast.LENGTH_SHORT);
+            "You have clicked LED On", Toast.LENGTH_SHORT);
         msg.show();
       }
     });
  
-    btnOff.setOnClickListener(new OnClickListener() {
+    ledOff.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         sendData("0");
         Toast msg = Toast.makeText(getBaseContext(),
-            "You have clicked Off", Toast.LENGTH_SHORT);
+            "You have clicked LED Off", Toast.LENGTH_SHORT);
         msg.show();
       }
     });
+    
+    gateOn.setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+          sendData("3");
+          Toast msg = Toast.makeText(getBaseContext(),
+              "You have clicked Gate On", Toast.LENGTH_SHORT);
+          msg.show();
+        }
+      });
+   
+      gateOff.setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+          sendData("2");
+          Toast msg = Toast.makeText(getBaseContext(),
+              "You have clicked Gate Off", Toast.LENGTH_SHORT);
+          msg.show();
+        }
+      });
+      
+      curtOn.setOnClickListener(new OnClickListener() {
+          public void onClick(View v) {
+            sendData("5");
+            Toast msg = Toast.makeText(getBaseContext(),
+                "You have clicked Curton On", Toast.LENGTH_SHORT);
+            msg.show();
+          }
+        });
+     
+        curtOff.setOnClickListener(new OnClickListener() {
+          public void onClick(View v) {
+            sendData("4");
+            Toast msg = Toast.makeText(getBaseContext(),
+                "You have clicked Curton Off", Toast.LENGTH_SHORT);
+            msg.show();
+          }
+        });
+        
+        getTemp.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+              sendData("6");
+              Toast msg = Toast.makeText(getBaseContext(),
+                  "You have clicked Get Temperature", Toast.LENGTH_SHORT);
+              msg.show();
+            }
+          });
+    
   }
    
   @Override
