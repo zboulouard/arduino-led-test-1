@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
  
 public class MainActivity extends Activity {
-  private static final String TAG = "LEDOnOff";
+  private static final String TAG = "Abdel-Domotic";
    
   Button ledOn, ledOff;
   Button gateOn, gateOff;
@@ -54,9 +54,6 @@ public class MainActivity extends Activity {
     gateOff = (Button) findViewById(R.id.gateOff);
     curtOn = (Button) findViewById(R.id.curtOn);
     curtOff = (Button) findViewById(R.id.curtOff);
-    getTemp = (Button) findViewById(R.id.getTemp);
-    
-    temp = (TextView) findViewById(R.id.temp);
      
     btAdapter = BluetoothAdapter.getDefaultAdapter();
     checkBTState();
@@ -114,15 +111,6 @@ public class MainActivity extends Activity {
             msg.show();
           }
         });
-        
-        getTemp.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-              sendData("6");
-              Toast msg = Toast.makeText(getBaseContext(),
-                  "You have clicked Get Temperature", Toast.LENGTH_SHORT);
-              msg.show();
-            }
-          });
     
   }
    
