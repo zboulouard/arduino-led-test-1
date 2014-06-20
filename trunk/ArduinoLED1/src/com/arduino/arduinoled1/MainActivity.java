@@ -1,6 +1,7 @@
 package com.arduino.arduinoled1;
  
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +28,14 @@ public class MainActivity extends Activity {
   Button getTemp;
   
   TextView temp;
+  
+  OutputStream mmOutputStream;
+  InputStream mmInputStream;
+  Thread workerThread;
+  byte[] readBuffer;
+  int readBufferPosition;
+  int counter;
+  volatile boolean stopWorker;
    
   private static final int REQUEST_ENABLE_BT = 1;
   private BluetoothAdapter btAdapter = null;
@@ -54,6 +64,8 @@ public class MainActivity extends Activity {
     gateOff = (Button) findViewById(R.id.gateOff);
     curtOn = (Button) findViewById(R.id.curtOn);
     curtOff = (Button) findViewById(R.id.curtOff);
+    getTemp = (Button) findViewById(R.id.gettemp);
+    temp = (TextView) findViewById(R.id.showtemp);
      
     btAdapter = BluetoothAdapter.getDefaultAdapter();
     checkBTState();
@@ -111,6 +123,18 @@ public class MainActivity extends Activity {
             msg.show();
           }
         });
+        
+        getTemp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+	            sendData("6");
+	            Toast msg = Toast.makeText(getBaseContext(),
+	                "You have clicked Get Temperature", Toast.LENGTH_SHORT);
+	            msg.show();
+				beginListenForData();
+			}
+		});
     
   }
    
@@ -221,4 +245,53 @@ public class MainActivity extends Activity {
       errorExit("Fatal Error", msg);       
     }
   }
+  
+	void beginListenForData() {
+		final Handler handler = new Handler();
+		final byte delimiter = 10; // This is the ASCII code for a newline
+									// character
+
+		stopWorker = false;
+		readBufferPosition = 0;
+		readBuffer = new byte[1024];
+		workerThread = new Thread(new Runnable() {
+			public void run() {
+				while (!Thread.currentThread().isInterrupted() && !stopWorker) {
+					try {
+	/* à essayer */		mmInputStream = btSocket.getInputStream();
+						int bytesAvailable = mmInputStream.available();
+						if (bytesAvailable > 0) {
+							byte[] packetBytes = new byte[bytesAvailable];
+							mmInputStream.read(packetBytes);
+							for (int i = 0; i < bytesAvailable; i++) {
+								byte b = packetBytes[i];
+								if (b == delimiter) {
+									byte[] encodedBytes = new byte[readBufferPosition];
+									System.arraycopy(readBuffer, 0,
+											encodedBytes, 0,
+											encodedBytes.length);
+									final String data = new String(
+											encodedBytes, "US-ASCII");
+									readBufferPosition = 0;
+									
+									handler.post(new Runnable() {
+										public void run() {
+											temp.setText(data);
+										}
+									});
+								} else {
+									readBuffer[readBufferPosition++] = b;
+								}
+							}
+						}
+					} catch (IOException ex) {
+						stopWorker = true;
+					}
+				}
+			}
+		});
+
+		workerThread.start();
+	}
+  
 }
