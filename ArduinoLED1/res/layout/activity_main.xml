@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout 
+        android:id="@+id/doors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -66,6 +67,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/offCurt" />
         </LinearLayout>
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/doors" >
+        
+	    <Button
+		    android:id="@+id/gettemp"
+		    android:layout_width="200dp"
+		    android:layout_height="wrap_content"
+		    android:text="@string/getTemp" />
+	    
+	    <TextView
+		    android:id="@+id/showtemp"
+		    android:layout_width="200dp"
+		    android:layout_height="wrap_content"
+		    android:text="@string/showTemp"
+		    android:textSize="30sp" />
         
     </LinearLayout>
 		
